@@ -1,0 +1,18 @@
+- hosts: centos-test
+  gather_facts: false
+  tasks:
+    # Need to install python3 and pip first so Ansible will function
+    # This is due to CentOS7 shipping with Python2.7 by default
+  - name: Install python3 and pip
+    become: true
+    raw: bash -c "apt -qqy update && apt install -qqy python2.7-dev python-pip"
+    register: output
+    changed_when: output.stdout != ""
+
+  - name: Gathering Facts
+    setup:
+
+  - include_role: 
+      name: centos_test
+  
+  
