@@ -46,6 +46,7 @@ class CoverPages (object):
             url = '/' + row.filename
             href = '/ebooks/%d' % row.pk
             title = gg.xmlspecialchars (row.title)
+            title = title.replace('\"','&quot;')
 	    #Shortening long titles for latest covers
             short_title = title
             short_title = short_title.replace ('"', '&quot;')
