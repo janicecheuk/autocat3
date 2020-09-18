@@ -186,8 +186,8 @@ def main():
 
     uid = cherrypy.config['uid']
     gid = cherrypy.config['gid']
-    if uid > 0 or gid > 0:
-        plugins.DropPrivileges(cherrypy.engine, uid=uid, gid=gid, umask=0o22).subscribe()
+    # if uid > 0 or gid > 0:
+    #     plugins.DropPrivileges(cherrypy.engine, uid=uid, gid=gid, umask=0o22).subscribe()
 
     if cherrypy.config['pidfile']:
         pid = plugins.PIDFile(cherrypy.engine, cherrypy.config['pidfile'])
