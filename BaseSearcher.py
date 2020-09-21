@@ -599,6 +599,8 @@ class OpenSearch (object):
         last_page = max ((self.total_results - 1) // self.items_per_page, 0) # 0-based
 
         self.end_index = min (self.start_index + self.items_per_page - 1, self.total_results)
+        if self.end_index==1000:
+            self.end_index='1000 (max)'
 
         self.prev_page_index = max (self.start_index - self.items_per_page, 1)
         self.next_page_index = min (self.start_index + self.items_per_page, self.total_results)
