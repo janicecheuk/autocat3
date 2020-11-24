@@ -188,6 +188,7 @@ class CloudStorage (object):
             session.unauthorized (what)
             self.unauthorized ('RequestError: ' + str (what))
             raise cherrypy.HTTPError (500, str (what))
+        session.dc.session.close()
 
 
     def upload_file (self, oauth_session, response):
@@ -279,8 +280,8 @@ class EbookMetaData (object):
 
     def get_dc (self):
         """ Get a DublinCore struct for the ebook. """
-        dc = BaseSearcher.DC (cherrypy.engine.pool)
-        dc.load_from_database (self.id)
+        self.dc = BaseSearcher.DC ()
+        self.dc.load_from_database (self.id)
         # dc.translate ()
         return dc
 

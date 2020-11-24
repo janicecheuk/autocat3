@@ -28,7 +28,7 @@ import six
 from libgutenberg.MediaTypes import mediatypes as mt
 from libgutenberg.GutenbergDatabase import xl, DatabaseError
 from libgutenberg import DublinCore
-from libgutenberg import GutenbergDatabaseDublinCore
+from libgutenberg import DublinCoreMapping
 from libgutenberg import GutenbergGlobals as gg
 
 from i18n_tool import ugettext as _
@@ -99,12 +99,16 @@ class ClassAttr(object):
         return b in self.value
 
 
-class DC(GutenbergDatabaseDublinCore.GutenbergDatabaseDublinCore,
+class DC(DublinCoreMapping.DublinCoreObject,
           DublinCoreI18n.DublinCoreI18nMixin):
     """ A localized DublinCore. """
 
-    def __init__(self, pool):
-        GutenbergDatabaseDublinCore.GutenbergDatabaseDublinCore.__init__(self, pool)
+    def __init__(self):
+        DublinCoreMapping.DublinCoreObject.__init__(
+            self,
+            session=cherrypy.engine.pool.Session(),
+            pooled=True,
+        )
         DublinCoreI18n.DublinCoreI18nMixin.__init__(self)
 
 

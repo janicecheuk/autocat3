@@ -15,10 +15,15 @@ from __future__ import unicode_literals
 import logging
 
 import psycopg2
+
 import sqlalchemy.pool as pool
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 import cherrypy
 from cherrypy.process import plugins
 
+DUMMY_SQL_URL = "postgresql://127.0.0.1:5432/gutenberg"
 
 class ConnectionCreator ():
     """ Creates connections for the connection pool. """
@@ -55,13 +60,14 @@ class ConnectionPool (plugins.SimplePlugin):
 
         self.bus.log ("... pool_size = %d, max_overflow = %d" % (pool_size, max_overflow))
 
-        return pool.QueuePool (ConnectionCreator (self.params),
+        my_pool =  pool.QueuePool (ConnectionCreator (self.params),
                                pool_size       = pool_size,
                                max_overflow    = max_overflow,
                                timeout         = timeout,
-                               recycle         = recycle,
-                               use_threadlocal = True)
-
+                               recycle         = recycle)
+        engine = create_engine(DUMMY_SQL_URL, echo=False, pool=my_pool)
+        Session = sessionmaker(bind=engine)
+        return my_pool, Session
 
     def connect (self):
         """ Return a connection. """
@@ -73,11 +79,10 @@ class ConnectionPool (plugins.SimplePlugin):
         """ Called on engine start. """
 
         if self.pool is None:
-            self.bus.log ("Creating the SQL connection pool ...")
-            self.pool = self._start ()
+            self.bus.log ("Creating the SQL connectors ...")
+            self.pool, self.Session = self._start ()
         else:
-            self.bus.log ("An SQL connection pool already exists.")
-    # start.priority = 80
+            self.bus.log ("SQL connectors already exists.")
 
 
     def stop (self):
@@ -85,6 +90,7 @@ class ConnectionPool (plugins.SimplePlugin):
 
         if self.pool is not None:
             self.bus.log ("Disposing the SQL connection pool.")
+            self.Session = None
             self.pool.dispose ()
             self.pool = None
 

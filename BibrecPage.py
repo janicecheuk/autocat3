@@ -34,7 +34,7 @@ class BibrecPage (Page.Page):
 
         os.log_request ('bibrec')
 
-        dc = BaseSearcher.DC (cherrypy.engine.pool)
+        dc = BaseSearcher.DC ()
 
         # the bulk of the work is done here
         dc.load_from_database (os.id)
@@ -107,5 +107,6 @@ class BibrecPage (Page.Page):
         os.page = 'bibrec'
         os.og_type = 'book'
         os.finalize ()
-
-        return self.format (os)
+        rendered = self.format (os)
+        dc.session.close()
+        return rendered
