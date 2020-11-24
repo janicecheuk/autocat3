@@ -16,7 +16,7 @@ Genshi = "*"
 html5lib = "*"
 isodate = "*"
 #language-selector = "*"
-libgutenberg = ">=0.6.7"
+libgutenberg = {editable = true,git = "git://github.com/gutenbergtools/libgutenberg.git",ref = "0f22d173e58a57070ae0e4560e06eb829d871326"}
 netaddr = "*"
 oauth = "*"
 oauthlib = "*"
