@@ -59,7 +59,6 @@ class ConnectionPool(plugins.SimplePlugin):
         recycle = cherrypy.config.get('sqlalchemy.recycle', 3600)
 
         self.bus.log("... pool_size = %d, max_overflow = %d" % (pool_size, max_overflow))
-
         my_pool = pool.QueuePool(ConnectionCreator(self.params),
                                  pool_size=pool_size,
                                  max_overflow=max_overflow,
